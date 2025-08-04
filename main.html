@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>HTML FORM</title>
+          <link rel="stylesheet" href="style.css">
+          
+</head>
+<body>
+          <div class="main">
+                    <img src="download.jpg" class="logo" >
+
+                 <b>   <h1 class="h1">Student Registration</h1> </b>
+
+                    <h5 class="h1">Indian institute of Technology , Patna</h5> 
+
+                    <form method="post" id="form">
+                              <div class="form">
+                                        <label for="name">Full Name*</label>
+                                        <input type="text" name="name" id="name">
+                                        <div class="error-message" id="nameError"></div>
+                              </div>
+
+                              <div class="form">
+                                        <label for="email">Email*</label>
+                                        <input type="email" name="email" id="email">
+                                        <div class="error-message" id="emailError"></div>
+                              </div>
+
+                              <div class="form">
+                                        <label for="phone">Phone Number*</label>
+                                        <input type="number" name="phone" id="phone">
+                                        <div class="error-message" id="phoneError"></div>
+                              </div>
+
+                              <div class="form">
+                                        <label for="dob">Dob*</label>
+                                        <input type="date" name="dob" id="dob">
+                                        <div class="error-message" id="dobError"></div>
+                              </div>
+
+                              <div class="abc">
+                                        <label for="course">Course :*-</label>  
+                                        <select id="course" name="course">
+                                        <option value="">-- Select Your Program --</option>
+                                        <option value="Data Analysis">Data Analysis</option>
+                                        <option value="Data Science">Data Science</option>
+                                        <option value="Full Stack Development">Full Stack Development</option>
+                                        <option value="Cyber Security">Cyber Security</option>
+                                        <option value="Business Administration">Business Administration</option>
+                                        </select>
+                                        <div class="error-message" id="courseError"></div>
+                              </div>
+                                        
+                              <button type="submit" class="submit" name="btn">
+                               Register Now  
+                              </button>
+                    </form>
+          </div>
+          
+</body>
+
+<script>
+         document.getElementById('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset error states
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('show-error');
+            });
+            
+            // Get form values
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const dob = document.getElementById('dob').value.trim();
+            const course = document.getElementById('course').value;
+            
+            let isValid = true;
+            
+            // Validate name
+            if (!name) {
+                document.getElementById('nameError').textContent = 'Name is required';
+                document.getElementById('nameError').classList.add('show-error');
+                isValid = false;
+            }
+            
+            // Validate email
+            if (!email) {
+                document.getElementById('emailError').textContent = 'Email is required';
+                document.getElementById('emailError').classList.add('show-error');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email';
+                document.getElementById('emailError').classList.add('show-error');
+                isValid = false;
+            }
+            
+            // Validate phone (optional but if provided, must be valid)
+            if (phone && !/^\d{10,15}$/.test(phone)) {
+                document.getElementById('phoneError').textContent = 'Please enter a valid phone number (10-15 digits)';
+                document.getElementById('phoneError').classList.add('show-error');
+                isValid = false;
+            }
+            
+            // Validate date of birth
+            if (!dob) {
+                document.getElementById('dobError').textContent = 'Date of birth is required';
+                document.getElementById('dobError').classList.add('show-error');
+                isValid = false;
+            } else {
+                // Check if date is not in the future
+                const selectedDate = new Date(dob);
+                const today = new Date();
+                if (selectedDate > today) {
+                    document.getElementById('dobError').textContent = 'Date of birth cannot be in the future';
+                    document.getElementById('dobError').classList.add('show-error');
+                    isValid = false;
+                }
+            }
+            
+            // Validate course selection
+            if (!course) {
+                document.getElementById('courseError').textContent = 'Please select a course';
+                document.getElementById('courseError').classList.add('show-error');
+                isValid = false;
+            }
+            
+            // If form is valid, submit data
+            if (isValid) {
+                const url='https://script.google.com/macros/s/AKfycbz2XrVzdKSpO_Qyu9ACsTEM0-cEBWJrbUPDoKnEdLJdjIQsJ9xT3ncx1Sr1Q3meunrnTA/exec';
+                const form = document.getElementById('form');
+                const formData = new FormData(form);
+                
+                fetch(url, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(finalResponse => {
+                    console.log(finalResponse);
+                    // You can add success message here
+                    alert('Registration successful!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Registration failed. Please try again.');
+                });
+            }
+         });
+</script>
+</html>
